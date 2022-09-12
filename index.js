@@ -1,14 +1,21 @@
-import dotenv from 'dotenv';
 import express from 'express';
+import dotenv from 'dotenv';
+
+import Connection from './database/db.js';
+import InsertDefaultData from './insertProductsToMongoDb.js';
+
+const app = express();
 
 dotenv.config();
-const app = express();
+
 const PORT = process.env.PORT || 8000;
 
-app.get('/', function (req, res) {
-  res.send('Hello World!');
-});
+const username = process.env.DB_USERNAME;
+const password = process.env.DB_PASSWORD;
+const dbName = process.env.DB_NAME;
 
-app.listen(PORT, function () {
-  console.log(`Example app listening on port ${PORT}!`);
-});
+Connection(username, password, dbName);
+
+app.listen(PORT, () => console.log(`Server is running successfully on PORT ${PORT}`));
+
+InsertDefaultData();
