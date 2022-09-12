@@ -5,7 +5,7 @@ export const getProducts = async (request, response) => {
     try {
         const products = await Product.find({});
 
-        response.json(products);
+        response.status(200).json(products);
     } catch (error) {
         response.json('Error: ', error.message);
     }
@@ -13,9 +13,9 @@ export const getProducts = async (request, response) => {
 
 export const getProductById = async (request, response) => {
     try {
-        console.log('Hie')
-        const products = await Product.findOne({ 'id': request.params.id });
-        response.json(products);
+        const id = request.params.id;
+        const products = await Product.findOne({ 'id': id });
+        response.status(200).json(products);
     } catch (error) {
         response.json('Error: ', error.message);
     }
