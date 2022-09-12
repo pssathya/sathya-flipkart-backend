@@ -2,17 +2,19 @@ import User from '../model/userSchema.js';
 
 export const userLogIn = async (request, response) => {
     try {
-        let user = await User.findOne({ username: request.body.username, password: request.body.password });
+        const uname = request.body.username;
+        const pwd = request.body.password;
+        let user = await User.findOne({ username: uname, password: pwd });
         if (user) {
-            return response.status(200).json(`${request.body.username} login successfull`);
+            return response.status(200).json({ data : user});
         } else {
-            let userEmailObj = await User.findOne({ email: request.body.username, password: request.body.password });
+            let userEmailObj = await User.findOne({ email: uname, password: pwd });
             if (userEmailObj) {
-                return response.status(200).json(`${request.body.username} login successfull`);
+                return response.status(200).json({ data : userEmailObj});
             } else {
-                let userPhoneObj = await User.findOne({ phone: request.body.username, password: request.body.password });
+                let userPhoneObj = await User.findOne({ phone: uname, password: pwd });
                 if (userPhoneObj) {
-                    return response.status(200).json(`${request.body.username} login successfull`);
+                    return response.status(200).json({ data : userPhoneObj});
                 } else {
                     return response.status(401).json('Invalid Login');
                 }
