@@ -7,9 +7,9 @@ import Connection from './database/db.js';
 import InsertDefaultData from './insertProductsToMongoDb.js';
 import Routes from './routes/route.js';
 
-const app = express();
-
 dotenv.config();
+
+const app = express();
 
 const PORT = process.env.PORT || 8000;
 
@@ -17,11 +17,13 @@ app.get('/', function (req, res) {
   res.send("Welcome to 'sathya-flipkart-backend' APIs");
 });
 
-const username = process.env.DB_USERNAME;
-const password = process.env.DB_PASSWORD;
-const dbName = process.env.DB_NAME;
+const USERNAME = process.env.DB_USERNAME;
+const PASSWORD = process.env.DB_PASSWORD;
+const DBNAME = process.env.DB_NAME;
 
-Connection(username, password, dbName);
+const URL = process.env.MONGODB_URI || `mongodb+srv://${USERNAME}:${PASSWORD}@cluster0.fka2rkz.mongodb.net/${DBNAME}?retryWrites=true&w=majority`;
+
+Connection(URL);
 
 app.listen(PORT, () => console.log(`Server is running successfully on PORT ${PORT}`));
 
