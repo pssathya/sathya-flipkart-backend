@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/pssathya/sathya-flipkart-backend/issues"
   },
-  "homepage": "https://github.com/pssathya/sathya-flipkart-backend#readme"
+  "homepage": "https://github.com/pssathya/sathya-flipkart-backend#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
 }
