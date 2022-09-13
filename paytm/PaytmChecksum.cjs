@@ -91,4 +91,5 @@ class PaytmChecksum {
 	}
 }
 PaytmChecksum.iv = '@@@@&&&&####$$$$';
+
 module.exports = PaytmChecksum;
