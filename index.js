@@ -35,7 +35,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use('/', Routes);
 
-export let paytmMerchantkey = process.env.PAYTM_MERCHANT_KEY;
 export let paytmParams = {};
 paytmParams['MID'] = process.env.PAYTM_MID,
 paytmParams['WEBSITE'] = process.env.PAYTM_WEBSITE,

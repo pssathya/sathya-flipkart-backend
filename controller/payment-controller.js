@@ -2,10 +2,10 @@ import formidable from 'formidable';
 import https from 'https';
 
 import paytmchecksum from '../paytm/PaytmChecksum.cjs';
-import { paytmParams, paytmMerchantkey } from '../index.js';
+import { paytmParams, PAYTM_MERCHANT_KEY } from '../index.js';
 
 export const addPaymentGateway = async (request, response) => {
-    let paytmCheckSum = await paytmchecksum.generateSignature(paytmParams, paytmMerchantkey);
+    let paytmCheckSum = await paytmchecksum.generateSignature(paytmParams, PAYTM_MERCHANT_KEY);
     try {
         let params = {
             ...paytmParams,
@@ -18,19 +18,19 @@ export const addPaymentGateway = async (request, response) => {
 }
 
 export const paymentResponse = (request, response) => {
-
+    console.log(">>>>",request.body);
     const form = new formidable.IncomingForm();
     let paytmCheckSum = request.body.CHECKSUMHASH;
     delete request.body.CHECKSUMHASH;
 
-    var isVerifySignature = paytmchecksum.verifySignature(request.body, 'bKMfNxPPf_QdZppa', paytmCheckSum);
+    var isVerifySignature = paytmchecksum.verifySignature(request.body, PAYTM_MERCHANT_KEY, paytmCheckSum);
     console.log(isVerifySignature);
     if (isVerifySignature) {
         var paytmParams = {};
         paytmParams["MID"] = request.body.MID;
         paytmParams["ORDERID"] = request.body.ORDERID;
 
-        paytmchecksum.generateSignature(paytmParams, 'bKMfNxPPf_QdZppa').then(function (checksum) {
+        paytmchecksum.generateSignature(paytmParams, PAYTM_MERCHANT_KEY).then(function (checksum) {
 
             paytmParams["CHECKSUMHASH"] = checksum;
 
