@@ -1,3 +1,5 @@
+import bcrypt from 'bcryptjs';
+
 import User from '../model/userSchema.js';
 
 export const getAllUsers = async (request, response) => {
@@ -42,7 +44,11 @@ export const userSignUp = async (request, response) => {
         if (exist) {
             return response.status(401).json({ message: 'User already exist' });
         }
+        //encrypt Password
+        let hashPassword = bcrypt.hashSync(request.body.password, 8);
+
         const user = request.body;
+        user.password = hashPassword;
         const newUser = new User(user);
         await newUser.save();
         response.status(200).json({ mesage: user });
