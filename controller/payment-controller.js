@@ -1,24 +1,53 @@
 import formidable from 'formidable';
 import https from 'https';
+import paytmchecksum from 'paytmchecksum';
+import { v4 as uuid } from 'uuid';
 
-import paytmchecksum from '../paytm/PaytmChecksum.cjs';
-import { paytmParams, PAYTM_MERCHANT_KEY } from '../index.js';
+import { PAYTM_MID, PAYTM_MERCHANT_KEY, PAYTM_WEBSITE, PAYTM_CHANNEL_ID, PAYTM_INDUSTRY_TYPE_ID, PAYTM_CALLBACK_URL } from '../index.js';
 
 export const addPaymentGateway = async (request, response) => {
-    let paytmCheckSum = await paytmchecksum.generateSignature(paytmParams, PAYTM_MERCHANT_KEY);
+
     try {
-        let params = {
-            ...paytmParams,
-            'CHECKSUMHASH': paytmCheckSum
-        };
-        response.json(params);
+        var paymentDetails = {
+            amount: request.body.amount,
+            customerId: request.body.name,
+            customerEmail: request.body.email,
+            customerPhone: request.body.phone
+        }
+        if (!paymentDetails.amount || !paymentDetails.customerId || !paymentDetails.customerEmail || !paymentDetails.customerPhone) {
+            response.status(400).send('Payment failed')
+        } else {
+
+            var paytmParams = {};
+            paytmParams['MID'] = PAYTM_MID;
+            paytmParams['WEBSITE'] = PAYTM_WEBSITE;
+            paytmParams['CHANNEL_ID'] = PAYTM_CHANNEL_ID;
+            paytmParams['INDUSTRY_TYPE_ID'] = PAYTM_INDUSTRY_TYPE_ID;
+            paytmParams['ORDER_ID'] = uuid();
+            paytmParams['CUST_ID'] = paymentDetails.customerId;
+            paytmParams['TXN_AMOUNT'] = String(paymentDetails.amount);
+            paytmParams['CALLBACK_URL'] = PAYTM_CALLBACK_URL;
+            paytmParams['EMAIL'] = paymentDetails.customerEmail;
+            paytmParams['MOBILE_NO'] = paymentDetails.customerPhone;
+
+            console.log(">>>>", paytmParams);
+            let paytmCheckSum = await paytmchecksum.generateSignature(paytmParams, PAYTM_MERCHANT_KEY);
+
+            let params = {
+                ...paytmParams,
+                'CHECKSUMHASH': paytmCheckSum
+            };
+            response.status(200).json(params);
+        }
+
     } catch (error) {
         console.log(error);
+        response.status(500).json({ error: error.message });
     }
 }
 
 export const paymentResponse = (request, response) => {
-    console.log(">>>>",request.body);
+    console.log(">>>>", request.body);
     const form = new formidable.IncomingForm();
     let paytmCheckSum = request.body.CHECKSUMHASH;
     delete request.body.CHECKSUMHASH;
