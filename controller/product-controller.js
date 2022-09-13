@@ -7,7 +7,7 @@ export const getProducts = async (request, response) => {
 
         response.status(200).json(products);
     } catch (error) {
-        response.json('Error: ', error.message);
+        response.status(500).json('Error: ', error.message);
     }
 }
 
@@ -17,6 +17,6 @@ export const getProductById = async (request, response) => {
         const products = await Product.findOne({ 'id': id });
         response.status(200).json(products);
     } catch (error) {
-        response.json('Error: ', error.message);
+        response.status(500).json('Error: ', error.message);
     }
 }
