@@ -6,9 +6,9 @@ import { userSignUp, userLogIn, getAllUsers } from '../controller/user-controlle
 const router = express.Router();
 
 //login & signup
-router.post('/signup', userSignUp);
-router.post('/login', userLogIn);
-router.get('/users', getAllUsers);
+router.post('/api/auth/signup', userSignUp);
+router.post('/api/auth/login', userLogIn);
+router.get('/api/auth/users', getAllUsers);
 
 router.get('/products', getProducts);
 router.get('/product/:id', getProductById);
