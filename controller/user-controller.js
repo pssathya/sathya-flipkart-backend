@@ -35,7 +35,7 @@ export const userLogIn = async (request, response) => {
             if (!isPassValid)
                 return response.status(401).json({ auth: false, token: 'Invalid Password' });
             // in case both match 
-            let token = jwt.sign({ id: user._id }, SuperSecret.secret, { expiresIn: 86400 }); //24 hours
+            let token = jwt.sign({ id: user._id, firstname: user.firstname }, SuperSecret.secret, { expiresIn: 86400 }); //24 hours
             return response.status(200).json({ auth: true, userFirstName: user.firstname, token: token });
         }
         else {
@@ -63,7 +63,7 @@ export const userSignUp = async (request, response) => {
         await newUser.save();
 
         const userObj = await User.findOne({ username: uname });
-        let token = jwt.sign({ id: userObj._id }, SuperSecret.secret, { expiresIn: 86400 }); //24 hours
+        let token = jwt.sign({ id: userObj._id, firstname: user.firstname }, SuperSecret.secret, { expiresIn: 86400 }); //24 hours
         return response.status(200).json({ auth: true, userFirstName: userObj.firstname, token: token });
 
     } catch (error) {
