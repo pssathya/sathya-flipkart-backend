@@ -40,8 +40,7 @@ export const addPaymentGateway = async (request, response) => {
                 'CHECKSUMHASH': paytmChecksum
             };
             console.log(">>>>", params);
-            response.json(params);
-            //response.status(200).json({ paymentUrl: paymentUrl, params: params });
+            response.status(200).json({ paymentUrl: paymentUrl, params: params });
         }
     } catch (error) {
         console.log(error);
