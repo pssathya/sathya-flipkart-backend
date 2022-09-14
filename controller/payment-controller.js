@@ -31,15 +31,31 @@ export const addPaymentGateway = async (request, response) => {
             paytmParams['MOBILE_NO'] = paymentDetails.customerPhone;
 
             console.log(">>>>", paytmParams);
-            let paytmCheckSum = await paytmchecksum.generateSignature(paytmParams, PAYTM_MERCHANT_KEY);
 
-            let params = {
-                ...paytmParams,
-                'CHECKSUMHASH': paytmCheckSum
-            };
-            response.status(200).json(params);
+            var paytmChecksum = paytmchecksum.generateSignature(paytmParams, PAYTM_MERCHANT_KEY);
+            
+            paytmChecksum.then(function (paytmCheckSum) {
+                var txn_url = "https://securegw-stage.paytm.in/theia/processTransaction"; // for staging
+                // var txn_url = "https://securegw.paytm.in/theia/processTransaction"; // for production
+
+                let params = {
+                    ...paytmParams,
+                    'CHECKSUMHASH': paytmCheckSum
+                };
+
+                var form_fields = "";
+                for (var x in params) {
+                    form_fields += "<input type='hidden' name='" + x + "' value='" + params[x] + "' >";
+                }
+
+                response.writeHead(200, { 'Content-Type': 'text/html' });
+                response.write('<html><head><title>Merchant Checkout Page</title></head><body><center><h1>Please do not refresh this page...</h1></center><form method="post" action="' + txn_url + '" name="f1">' + form_fields + '</form><script type="text/javascript">document.f1.submit();</script></body></html>');
+                response.end();
+            }).catch(function (error) {
+                console.log(error);
+                response.status(500).json({ error: error.message });
+            });
         }
-
     } catch (error) {
         console.log(error);
         response.status(500).json({ error: error.message });
