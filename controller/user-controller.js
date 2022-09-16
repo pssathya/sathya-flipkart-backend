@@ -36,11 +36,33 @@ export const userLogIn = async (request, response) => {
                 return response.status(401).json({ auth: false, token: 'Invalid Password' });
             // in case both match 
             let token = jwt.sign({ id: user._id, firstname: user.firstname }, SuperSecret.secret, { expiresIn: 86400 }); //24 hours
-            return response.status(200).json({ auth: true, userFirstName: user.firstname, token: token });
+            return response.status(200).json({ auth: true, token: token });
         }
         else {
-            return response.status(401).json({ auth: false, token: 'Invalid Password' });
+            return response.status(401).json({ auth: false, token: 'No User Found' });
         }
+    } catch (error) {
+        response.status(500).json('Error: ', error.message);
+    }
+}
+
+export const userInfo = async (request, response) => {
+    try {
+        const token = request.headers['x-access-token'];
+
+        if (!token) response.status(400).json({ auth: false, token: 'No Token Provided' });
+
+        jwt.verify(token, SuperSecret.secret, (err, user) => {
+
+            if (err) return response.status(500).json({ auth: false, token: 'Invalid Token' });
+
+            User.findById(user.id, (err, result) => {
+
+                if (err) return response.status(500).json(err);
+
+                response.status(200).json(result);
+            })
+        })
     } catch (error) {
         response.status(500).json('Error: ', error.message);
     }
@@ -64,7 +86,7 @@ export const userSignUp = async (request, response) => {
 
         const userObj = await User.findOne({ username: uname });
         let token = jwt.sign({ id: userObj._id, firstname: user.firstname }, SuperSecret.secret, { expiresIn: 86400 }); //24 hours
-        return response.status(200).json({ auth: true, userFirstName: userObj.firstname, token: token });
+        return response.status(200).json({ auth: true, token: token });
 
     } catch (error) {
         response.status(500).json({ message: error.message });
