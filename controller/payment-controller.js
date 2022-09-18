@@ -3,7 +3,7 @@ import https from 'https';
 import paytmchecksum from 'paytmchecksum';
 import { v4 as uuid } from 'uuid';
 
-import { PAYTM_MID, PAYTM_MERCHANT_KEY, PAYTM_WEBSITE, PAYTM_CHANNEL_ID, PAYTM_INDUSTRY_TYPE_ID, PAYTM_CALLBACK_URL } from '../index.js';
+import { PAYTM_MID, PAYTM_MERCHANT_KEY, PAYTM_WEBSITE, PAYTM_CHANNEL_ID, PAYTM_INDUSTRY_TYPE_ID, PAYTM_CALLBACK_URL } from '../config.js';
 
 export const addPaymentGateway = async (request, response) => {
 
