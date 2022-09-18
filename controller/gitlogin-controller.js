@@ -3,41 +3,6 @@ import superagent from 'superagent';
 
 import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '../config.js';
 
-export const oauthLoginSuccess = async (request, response) => {
-    try {
-        if (request.user) {
-            response.status(200).json({
-                success: true,
-                message: "successfull",
-                user: request.user,
-                //   cookies: request.cookies
-            });
-        }
-    } catch (error) {
-        response.status(500).json('Error: ', error.message);
-    }
-}
-
-export const oauthLoginFailed = async (request, response) => {
-    try {
-        response.status(401).json({
-            success: false,
-            message: "failure",
-        });
-    } catch (error) {
-        response.status(500).json('Error: ', error.message);
-    }
-}
-
-export const oauthLoggedOut = async (request, response) => {
-    try {
-        request.logout();
-        response.redirect(CLIENT_URL);
-    } catch (error) {
-        response.status(500).json('Error: ', error.message);
-    }
-}
-
 export const redirectToGitLogin = async (request, response) => {
     try {
         response.redirect(`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}`);
