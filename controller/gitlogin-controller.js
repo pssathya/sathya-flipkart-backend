@@ -1,6 +1,8 @@
 import requestInfo from 'request';
 import superagent from 'superagent';
 
+import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '../config.js';
+
 export const oauthLoginSuccess = async (request, response) => {
     try {
         if (request.user) {
@@ -38,7 +40,7 @@ export const oauthLoggedOut = async (request, response) => {
 
 export const redirectToGitLogin = async (request, response) => {
     try {
-        response.redirect('https://github.com/login/oauth/authorize?client_id=ed8dc9a82bf2000d2b24');
+        response.redirect(`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}`);
     } catch (error) {
         response.status(500).json('Error: ', error.message);
     }
@@ -57,8 +59,8 @@ export const invokeGitOAuth = async (request, response) => {
         superagent
             .post('https://github.com/login/oauth/access_token')
             .send({
-                client_id: 'ed8dc9a82bf2000d2b24',
-                client_secret: '8c4414f4910af3b6a355b96b5cb8cad06a28de69',
+                client_id: GITHUB_CLIENT_ID,
+                client_secret: GITHUB_CLIENT_SECRET,
                 code: code
             })
             .set('Accept', 'application/json')
