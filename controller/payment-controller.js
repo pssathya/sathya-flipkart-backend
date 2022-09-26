@@ -3,7 +3,7 @@ import https from 'https';
 import paytmchecksum from 'paytmchecksum';
 import { v4 as uuid } from 'uuid';
 
-import { PAYTM_MID, PAYTM_MERCHANT_KEY, PAYTM_WEBSITE, PAYTM_CHANNEL_ID, PAYTM_INDUSTRY_TYPE_ID, PAYTM_CALLBACK_URL } from '../config.js';
+import { PAYTM_MID, PAYTM_MERCHANT_KEY, PAYTM_WEBSITE, PAYTM_CHANNEL_ID, PAYTM_INDUSTRY_TYPE_ID, PAYTM_CALLBACK_URL, CLIENT_URL } from '../config.js';
 
 export const addPaymentGateway = async (request, response) => {
 
@@ -87,7 +87,7 @@ export const paymentResponse = (request, response) => {
 
                 post_res.on('end', function () {
                     let result = JSON.parse(res)
-                    response.redirect(`http://localhost:3000/`)
+                    response.redirect(CLIENT_URL)
                 });
             });
             post_req.write(post_data);
